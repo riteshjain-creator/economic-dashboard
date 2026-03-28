@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Economic Dashboard - Modern UX Mockup</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f7fa;
+            color: #1a202c;
+            line-height: 1.6;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        
+        .hero-date {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+        
+        .hero-headline {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+        
+        .hero-subheadline {
+            font-size: 1.3em;
+            opacity: 0.95;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+        
+        .hero-narrative {
+            max-width: 700px;
+            margin: 0 auto 30px;
+            font-size: 1.15em;
+            line-height: 1.7;
+            opacity: 0.95;
+        }
+        
+        .key-takeaway {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            max-width: 700px;
+            margin: 0 auto;
+            border-radius: 10px;
+            text-align: left;
+        }
+        
+        .key-takeaway-label {
+            font-size: 0.85em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            color: #ffc107;
+        }
+        
+        .key-takeaway-text {
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        
+        /* Signal Meter */
+        .signal-meter {
+            background: white;
+            max-width: 800px;
+            margin: -40px auto 30px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        
+        .signal-meter-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #1a202c;
+        }
+        
+        .signal-scale {
+            position: relative;
+            height: 60px;
+            background: linear-gradient(to right, #10b981, #ffc107, #ef4444);
+            border-radius: 30px;
+            margin-bottom: 15px;
+        }
+        
+        .signal-marker {
+            position: absolute;
+            top: 50%;
+            left: 60%;
+            transform: translate(-50%, -50%);
+            width: 24px;
+            height: 24px;
+            background: white;
+            border: 4px solid #1a202c;
+            border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        .signal-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .signal-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .signal-metric {
+            text-align: center;
+        }
+        
+        .signal-metric-value {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .signal-metric-label {
+            font-size: 0.85em;
+            color: #6b7280;
+        }
+        
+        .signal-interpretation {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            font-size: 0.95em;
+            color: #4b5563;
+        }
+        
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Market Pulse Cards */
+        .section-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #1a202c;
+        }
+        
+        .pulse-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .pulse-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .pulse-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+        
+        .pulse-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .pulse-icon {
+            font-size: 2em;
+            margin-right: 10px;
+        }
+        
+        .pulse-label {
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #6b7280;
+            font-weight: 600;
+        }
+        
+        .pulse-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .pulse-value.negative {
+            color: #ef4444;
+        }
+        
+        .pulse-value.positive {
+            color: #10b981;
+        }
+        
+        .pulse-change {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .pulse-change.negative {
+            color: #ef4444;
+        }
+        
+        .pulse-change.positive {
+            color: #10b981;
+        }
+        
+        .pulse-commentary {
+            font-size: 0.95em;
+            color: #4b5563;
+            line-height: 1.6;
+            border-top: 2px solid #e5e7eb;
+            padding-top: 15px;
+        }
+        
+        /* Sparkline */
+        .sparkline {
+            margin: 10px 0;
+            font-size: 1.5em;
+            letter-spacing: 2px;
+            color: #6b7280;
+        }
+        
+        /* Deep Dive Accordions */
+        .accordion {
+            margin-bottom: 15px;
+        }
+        
+        .accordion-header {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+        }
+        
+        .accordion-header:hover {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .accordion-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #1a202c;
+        }
+        
+        .accordion-icon {
+            font-size: 1.5em;
+            color: #667eea;
+            transition: transform 0.3s;
+        }
+        
+        .accordion-content {
+            background: white;
+            padding: 25px;
+            margin-top: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .accordion-section {
+            margin-bottom: 25px;
+        }
+        
+        .accordion-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .accordion-section p {
+            color: #4b5563;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+        
+        .insight-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .insight-box h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .insight-box p {
+            color: #856404;
+        }
+        
+        /* Sector Heatmap */
+        .heatmap {
+            margin: 20px 0;
+        }
+        
+        .heatmap-row {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+        
+        .heatmap-label {
+            flex: 0 0 120px;
+            font-weight: 600;
+        }
+        
+        .heatmap-bar {
+            flex: 1;
+            height: 30px;
+            border-radius: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .heatmap-bar.positive {
+            background: linear-gradient(to right, #10b981 0%, #34d399 100%);
+        }
+        
+        .heatmap-bar.negative {
+            background: linear-gradient(to right, #ef4444 0%, #f87171 100%);
+        }
+        
+        .heatmap-value {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-headline {
+                font-size: 1.5em;
+            }
+            
+            .hero-subheadline {
+                font-size: 1.1em;
+            }
+            
+            .pulse-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .signal-meter {
+                margin: -20px 20px 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <div class="hero">
+        <div class="hero-date">📊 March 28, 2026 • 4:30 PM IST</div>
+        <div class="hero-headline">🔴 FIFTH STRAIGHT LOSS</div>
+        <div class="hero-subheadline">Oil Shock Triggers Defensive Rotation</div>
+        <div class="hero-narrative">
+            Markets extended losses as Brent crude surged past $104, triggering a flight to defensive sectors. This isn't a correction—it's a regime change driven by oil inflation fears and global risk-off sentiment.
+        </div>
+        <div class="key-takeaway">
+            <div class="key-takeaway-label">💡 KEY TAKEAWAY</div>
+            <div class="key-takeaway-text">
+                Until oil stabilizes below $100 or geopolitical tensions ease, expect continued volatility. Defensive sectors (Pharma, FMCG) are your only safe haven right now.
+            </div>
+        </div>
+    </div>
+    
+    <!-- Signal Meter -->
+    <div class="signal-meter">
+        <div class="signal-meter-title">🎯 MARKET REGIME INDICATOR</div>
+        <div class="signal-scale">
+            <div class="signal-marker"></div>
+        </div>
+        <div class="signal-labels">
+            <span>😱 PANIC</span>
+            <span>😰 FEAR</span>
+            <span>😐 NEUTRAL</span>
+            <span>😊 GREED</span>
+            <span>🤑 EUPHORIA</span>
+        </div>
+        <div class="signal-metrics">
+            <div class="signal-metric">
+                <div class="signal-metric-value">18.5 ↑</div>
+                <div class="signal-metric-label">India VIX</div>
+            </div>
+            <div class="signal-metric">
+                <div class="signal-metric-value">1.15</div>
+                <div class="signal-metric-label">Put/Call Ratio</div>
+            </div>
+            <div class="signal-metric">
+                <div class="signal-metric-value">12:38</div>
+                <div class="signal-metric-label">Advance/Decline</div>
+            </div>
+            <div class="signal-metric">
+                <div class="signal-metric-value">6/10</div>
+                <div class="signal-metric-label">Fear Level</div>
+            </div>
+        </div>
+        <div class="signal-interpretation">
+            <strong>→ INTERPRETATION:</strong> Risk-off mode with elevated fear, but not panic yet. VIX above 15 signals genuine concern. Watch for VIX > 22 (true capitulation) or drop to 15-16 (fear subsiding). Moderate put buying suggests hedging, not panic selling.
+        </div>
+    </div>
+    
+    <!-- Market Pulse -->
+    <div class="container">
+        <h2 class="section-title">📊 Market Pulse</h2>
+        <div class="pulse-grid">
+            <div class="pulse-card">
+                <div class="pulse-card-header">
+                    <div class="pulse-icon">📈</div>
+                    <div class="pulse-label">Nifty 50</div>
+                </div>
+                <div class="pulse-value negative">22,819</div>
+                <div class="pulse-change negative">-2.09% (-487 pts)</div>
+                <div class="sparkline">▁▂▃▅▇▆▅▃▂▁</div>
+                <div class="pulse-commentary">
+                    Fifth straight weekly loss. Broadening weakness with small caps hit hardest (-3.5%). This is broad capitulation, not selective selling.
+                </div>
+            </div>
+            
+            <div class="pulse-card">
+                <div class="pulse-card-header">
+                    <div class="pulse-icon">⚠️</div>
+                    <div class="pulse-label">Volatility (VIX)</div>
+                </div>
+                <div class="pulse-value negative">18.5</div>
+                <div class="pulse-change negative">+3.2%</div>
+                <div class="sparkline">▁▁▂▃▅▇▇▆▅▄</div>
+                <div class="pulse-commentary">
+                    Fear rising—this isn't just profit-taking. VIX spike during selloff = genuine concern. Hedging activity up significantly.
+                </div>
+            </div>
+            
+            <div class="pulse-card">
+                <div class="pulse-card-header">
+                    <div class="pulse-icon">💸</div>
+                    <div class="pulse-label">FII Flows</div>
+                </div>
+                <div class="pulse-value negative">-₹12,000 Cr</div>
+                <div class="pulse-change negative">Sold today</div>
+                <div class="sparkline">▇▇▇▆▆▅▄▃▂▁</div>
+                <div class="pulse-commentary">
+                    March outflow: ₹1.1L Cr (5x normal monthly average). This is an exodus, not rotation. Sustained pressure continues.
+                </div>
+            </div>
+            
+            <div class="pulse-card">
+                <div class="pulse-card-header">
+                    <div class="pulse-icon">🔄</div>
+                    <div class="pulse-label">Sector Leader</div>
+                </div>
+                <div class="pulse-value negative">Pharma -0.5%</div>
+                <div class="pulse-change">Least bad = winner</div>
+                <div class="sparkline">▃▃▃▃▄▄▄▅▅▆</div>
+                <div class="pulse-commentary">
+                    Defensive rotation in full force. Money fleeing cyclicals (Auto -3.2%, Banks -2.8%) into safety. Classic risk-off pattern.
+                </div>
+            </div>
+        </div>
+        
+        <!-- Deep Dive Accordions -->
+        <h2 class="section-title">🔍 Deep Dive Analysis</h2>
+        
+        <div class="accordion">
+            <div class="accordion-header">
+                <div class="accordion-title">▸ Market Structure Analysis</div>
+                <div class="accordion-icon">▼</div>
+            </div>
+        </div>
+        
+        <div class="accordion">
+            <div class="accordion-header">
+                <div class="accordion-title">▸ Sentiment Analysis</div>
+                <div class="accordion-icon">▼</div>
+            </div>
+        </div>
+        
+        <div class="accordion">
+            <div class="accordion-header">
+                <div class="accordion-title">▾ Sector Rotation</div>
+                <div class="accordion-icon">▲</div>
+            </div>
+            <div class="accordion-content">
+                <div class="accordion-section">
+                    <h3>🔄 Classic Defensive Rotation: Flight to Safety</h3>
+                    
+                    <div class="heatmap">
+                        <div class="heatmap-row">
+                            <div class="heatmap-label">Pharma</div>
+                            <div class="heatmap-bar negative" style="width: 10%;">
+                                <div class="heatmap-value">-0.5%</div>
+                            </div>
+                        </div>
+                        <div class="heatmap-row">
+                            <div class="heatmap-label">FMCG</div>
+                            <div class="heatmap-bar negative" style="width: 16%;">
+                                <div class="heatmap-value">-0.8%</div>
+                            </div>
+                        </div>
+                        <div class="heatmap-row">
+                            <div class="heatmap-label">IT</div>
+                            <div class="heatmap-bar negative" style="width: 30%;">
+                                <div class="heatmap-value">-1.5%</div>
+                            </div>
+                        </div>
+                        <div class="heatmap-row">
+                            <div class="heatmap-label">Banking</div>
+                            <div class="heatmap-bar negative" style="width: 56%;">
+                                <div class="heatmap-value">-2.8%</div>
+                            </div>
+                        </div>
+                        <div class="heatmap-row">
+                            <div class="heatmap-label">Realty</div>
+                            <div class="heatmap-bar negative" style="width: 60%;">
+                                <div class="heatmap-value">-3.0%</div>
+                            </div>
+                        </div>
+                        <div class="heatmap-row">
+                            <div class="heatmap-label">Auto</div>
+                            <div class="heatmap-bar negative" style="width: 64%;">
+                                <div class="heatmap-value">-3.2%</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <p>
+                        <strong>WHAT THIS TELLS US:</strong> Money is rotating OUT of cyclicals (auto, banks, real estate) and INTO defensives (pharma, FMCG). This is textbook risk-off behavior. Investors are saying: "I don't want growth, I want safety."
+                    </p>
+                    
+                    <div class="insight-box">
+                        <h4>📚 HISTORICAL CONTEXT</h4>
+                        <p>
+                            Last time we saw this rotation (Feb 2024), markets fell another 5% before bottoming. Defensive rotation is an early warning signal, not the bottom itself.
+                        </p>
+                    </div>
+                    
+                    <p>
+                        <strong>WHEN TO RE-ENTER CYCLICALS:</strong> When you see auto/banks/realty start outperforming for 3+ consecutive days → that's your signal risk appetite is returning.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="accordion">
+            <div class="accordion-header">
+                <div class="accordion-title">▸ Macro Forces</div>
+                <div class="accordion-icon">▼</div>
+            </div>
+        </div>
+        
+        <div class="accordion">
+            <div class="accordion-header">
+                <div class="accordion-title">▸ Technical Snapshot</div>
+                <div class="accordion-icon">▼</div>
+            </div>
+        </div>
+        
+        <div class="accordion">
+            <div class="accordion-header">
+                <div class="accordion-title">▸ What To Do Now (Trading Playbook)</div>
+                <div class="accordion-icon">▼</div>
+            </div>
+        </div>
+    </div>
+    
+    <div style="height: 60px;"></div>
+</body>
+</html>
