@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Economic Dashboard v2 - Narrative-First Design</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f8f9fa;
+            color: #1a202c;
+            line-height: 1.7;
+        }
+        
+        /* Layout: Sidebar + Content */
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Left Sidebar Navigation */
+        .sidebar {
+            width: 260px;
+            background: #1a202c;
+            color: white;
+            padding: 30px 20px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+        }
+        
+        .sidebar-logo {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #667eea;
+        }
+        
+        .nav-section {
+            margin-bottom: 30px;
+        }
+        
+        .nav-section-title {
+            font-size: 0.75em;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #6b7280;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        .nav-item {
+            padding: 10px 15px;
+            margin-bottom: 5px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95em;
+        }
+        
+        .nav-item:hover {
+            background: rgba(102, 126, 234, 0.2);
+        }
+        
+        .nav-item.active {
+            background: #667eea;
+            font-weight: 600;
+        }
+        
+        .nav-item-icon {
+            margin-right: 8px;
+        }
+        
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            margin-left: 260px;
+            padding: 40px 60px;
+            max-width: 1400px;
+        }
+        
+        /* Header Section */
+        .content-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+        }
+        
+        .header-date {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+        
+        .header-headline {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+        
+        .header-subheadline {
+            font-size: 1.3em;
+            opacity: 0.95;
+            margin-bottom: 20px;
+        }
+        
+        /* Narrative Content */
+        .narrative-section {
+            background: white;
+            padding: 50px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+        
+        .narrative-section h2 {
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            color: #1a202c;
+        }
+        
+        .narrative-text {
+            font-size: 1.15em;
+            line-height: 1.9;
+            color: #374151;
+            margin-bottom: 30px;
+        }
+        
+        .narrative-text strong {
+            color: #1a202c;
+            font-weight: 600;
+        }
+        
+        /* Key Takeaway Box */
+        .key-takeaway {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 30px 0;
+        }
+        
+        .key-takeaway-label {
+            font-size: 0.85em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #856404;
+            margin-bottom: 12px;
+        }
+        
+        .key-takeaway-text {
+            font-size: 1.1em;
+            line-height: 1.7;
+            color: #856404;
+        }
+        
+        /* Market Regime Box */
+        .market-regime {
+            background: #e7f3ff;
+            border-left: 5px solid #667eea;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 30px 0;
+        }
+        
+        .regime-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .regime-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .regime-metric {
+            text-align: center;
+        }
+        
+        .regime-metric-value {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #1a202c;
+        }
+        
+        .regime-metric-label {
+            font-size: 0.85em;
+            color: #6b7280;
+        }
+        
+        .regime-interpretation {
+            font-size: 0.95em;
+            color: #4b5563;
+            line-height: 1.6;
+        }
+        
+        /* Chart Container */
+        .chart-container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin: 30px 0;
+        }
+        
+        .chart-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #1a202c;
+        }
+        
+        .chart-canvas {
+            max-height: 350px;
+        }
+        
+        /* Heatmap */
+        .heatmap {
+            margin: 30px 0;
+        }
+        
+        .heatmap-row {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .heatmap-label {
+            flex: 0 0 120px;
+            font-weight: 600;
+            font-size: 1em;
+        }
+        
+        .heatmap-bar-container {
+            flex: 1;
+            height: 40px;
+            background: #f3f4f6;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .heatmap-bar {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 15px;
+            color: white;
+            font-weight: bold;
+            transition: width 0.5s ease;
+        }
+        
+        .heatmap-bar.red {
+            background: linear-gradient(to right, #ef4444, #dc2626);
+        }
+        
+        .heatmap-bar.light-red {
+            background: linear-gradient(to right, #fca5a5, #f87171);
+        }
+        
+        /* Insight Box */
+        .insight-box {
+            background: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 30px 0;
+        }
+        
+        .insight-box h4 {
+            color: #92400e;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+        
+        .insight-box p {
+            color: #92400e;
+            line-height: 1.7;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 220px;
+            }
+            
+            .content-area {
+                margin-left: 220px;
+                padding: 30px 40px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            
+            .content-area {
+                margin-left: 0;
+                padding: 20px;
+            }
+            
+            .narrative-section {
+                padding: 30px 20px;
+            }
+            
+            .header-headline {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Left Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="sidebar-logo">📊 Economic Dashboard</div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">TODAY • Mar 28</div>
+                <div class="nav-item active">
+                    <span class="nav-item-icon">📋</span> Synopsis
+                </div>
+                <div class="nav-item">
+                    <span class="nav-item-icon">📊</span> Market Structure
+                </div>
+                <div class="nav-item">
+                    <span class="nav-item-icon">🔄</span> Sector Rotation
+                </div>
+                <div class="nav-item">
+                    <span class="nav-item-icon">🌍</span> Macro Forces
+                </div>
+                <div class="nav-item">
+                    <span class="nav-item-icon">📉</span> Technical Snapshot
+                </div>
+                <div class="nav-item">
+                    <span class="nav-item-icon">🎯</span> Trading Playbook
+                </div>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">PAST DAYS</div>
+                <div class="nav-item">
+                    <span class="nav-item-icon">📅</span> Mar 27 (Thu)
+                </div>
+                <div class="nav-item">
+                    <span class="nav-item-icon">📅</span> Mar 26 (Wed)
+                </div>
+                <div class="nav-item">
+                    <span class="nav-item-icon">📅</span> Mar 25 (Tue)
+                </div>
+                <div class="nav-item">
+                    <span class="nav-item-icon">📅</span> Mar 24 (Mon)
+                </div>
+                <div class="nav-item">
+                    <span class="nav-item-icon">📅</span> Mar 23 (Sun)
+                </div>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">ARCHIVE</div>
+                <div class="nav-item">
+                    <span class="nav-item-icon">📁</span> This Week
+                </div>
+                <div class="nav-item">
+                    <span class="nav-item-icon">📁</span> Last Week
+                </div>
+                <div class="nav-item">
+                    <span class="nav-item-icon">📁</span> This Month
+                </div>
+            </div>
+        </div>
+        
+        <!-- Content Area -->
+        <div class="content-area">
+            <!-- Header -->
+            <div class="content-header">
+                <div class="header-date">📊 March 28, 2026 • Friday • 4:30 PM IST</div>
+                <div class="header-headline">🔴 FIFTH STRAIGHT LOSS</div>
+                <div class="header-subheadline">Oil Shock Triggers Defensive Rotation</div>
+            </div>
+            
+            <!-- Synopsis Section -->
+            <div class="narrative-section">
+                <h2>📋 Today's Synopsis</h2>
+                
+                <div class="narrative-text">
+                    Markets extended losses for the <strong>fifth consecutive week</strong> as Brent crude surged past <strong>$104 per barrel</strong>, triggering a sharp rotation into defensive sectors. The Nifty 50 fell <strong>2.09%</strong> to close at <strong>22,819</strong>, with small caps bearing the brunt of the selloff (<strong>-3.5%</strong>).
+                </div>
+                
+                <div class="narrative-text">
+                    This isn't a healthy correction—it's a <strong>regime change</strong>. When oil spikes, volatility rises, and foreign investors dump emerging markets, you get what we saw today: broad-based capitulation with only defensive sectors (Pharma, FMCG) showing relative strength.
+                </div>
+                
+                <!-- Chart: 7-Day Nifty Performance -->
+                <div class="chart-container">
+                    <div class="chart-title">Nifty 50: 7-Day Performance</div>
+                    <canvas id="niftyChart" class="chart-canvas"></canvas>
+                </div>
+                
+                <div class="narrative-text">
+                    The chart tells the story: a steady grind lower with no meaningful bounce attempts. Each rally gets sold into. This is distribution, not consolidation.
+                </div>
+                
+                <!-- Key Takeaway -->
+                <div class="key-takeaway">
+                    <div class="key-takeaway-label">💡 KEY TAKEAWAY</div>
+                    <div class="key-takeaway-text">
+                        Until oil stabilizes below $100 or geopolitical tensions ease, expect continued volatility. Defensive sectors (Pharma, FMCG) are your only safe haven. Don't try to catch falling knives in cyclicals (Auto, Banks, Realty).
+                    </div>
+                </div>
+                
+                <!-- Market Regime -->
+                <div class="market-regime">
+                    <div class="regime-title">🎯 MARKET REGIME: RISK-OFF MODE (6/10 Fear Level)</div>
+                    <div class="regime-metrics">
+                        <div class="regime-metric">
+                            <div class="regime-metric-value">18.5 ↑</div>
+                            <div class="regime-metric-label">India VIX</div>
+                        </div>
+                        <div class="regime-metric">
+                            <div class="regime-metric-value">1.15</div>
+                            <div class="regime-metric-label">Put/Call Ratio</div>
+                        </div>
+                        <div class="regime-metric">
+                            <div class="regime-metric-value">12:38</div>
+                            <div class="regime-metric-label">Adv/Dec</div>
+                        </div>
+                        <div class="regime-metric">
+                            <div class="regime-metric-value">-₹12k Cr</div>
+                            <div class="regime-metric-label">FII Flow</div>
+                        </div>
+                    </div>
+                    <div class="regime-interpretation">
+                        <strong>→ INTERPRETATION:</strong> Elevated fear (VIX > 15) with moderate hedging (PCR 1.15). Not panic yet, but genuine concern. Weak breadth (only 24% of stocks rose) signals broad selling pressure. Watch for VIX > 22 = capitulation phase.
+                    </div>
+                </div>
+                
+                <!-- Chart: Market Cap Performance -->
+                <div class="chart-container">
+                    <div class="chart-title">Market Cap Performance: Broadening Weakness</div>
+                    <canvas id="marketCapChart" class="chart-canvas"></canvas>
+                </div>
+                
+                <div class="narrative-text">
+                    <strong>What this chart reveals:</strong> Small caps are getting crushed (-3.5%), underperforming large caps by 1.4%. This is classic risk-off behavior—when money flees lower-quality names first. It signals liquidity stress and deteriorating sentiment.
+                </div>
+                
+                <!-- Sector Heatmap -->
+                <h2 style="margin-top: 50px; margin-bottom: 25px; font-size: 1.8em;">🔄 Sector Rotation: Flight to Safety</h2>
+                
+                <div class="narrative-text">
+                    Money is rotating OUT of cyclicals (Auto, Banks, Realty) and INTO defensives (Pharma, FMCG). This is textbook risk-off. Investors are saying: "I don't want growth, I want safety."
+                </div>
+                
+                <div class="heatmap">
+                    <div class="heatmap-row">
+                        <div class="heatmap-label">Pharma</div>
+                        <div class="heatmap-bar-container">
+                            <div class="heatmap-bar light-red" style="width: 10%;">-0.5%</div>
+                        </div>
+                    </div>
+                    <div class="heatmap-row">
+                        <div class="heatmap-label">FMCG</div>
+                        <div class="heatmap-bar-container">
+                            <div class="heatmap-bar light-red" style="width: 16%;">-0.8%</div>
+                        </div>
+                    </div>
+                    <div class="heatmap-row">
+                        <div class="heatmap-label">IT</div>
+                        <div class="heatmap-bar-container">
+                            <div class="heatmap-bar red" style="width: 30%;">-1.5%</div>
+                        </div>
+                    </div>
+                    <div class="heatmap-row">
+                        <div class="heatmap-label">Banking</div>
+                        <div class="heatmap-bar-container">
+                            <div class="heatmap-bar red" style="width: 56%;">-2.8%</div>
+                        </div>
+                    </div>
+                    <div class="heatmap-row">
+                        <div class="heatmap-label">Realty</div>
+                        <div class="heatmap-bar-container">
+                            <div class="heatmap-bar red" style="width: 60%;">-3.0%</div>
+                        </div>
+                    </div>
+                    <div class="heatmap-row">
+                        <div class="heatmap-label">Auto</div>
+                        <div class="heatmap-bar-container">
+                            <div class="heatmap-bar red" style="width: 64%;">-3.2%</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="insight-box">
+                    <h4>📚 HISTORICAL CONTEXT</h4>
+                    <p>
+                        Last time we saw this rotation pattern (February 2024), markets fell another <strong>5% before bottoming</strong>. Defensive rotation is an early warning signal, not the bottom itself. When you see Auto/Banks/Realty start outperforming for 3+ consecutive days → that's your signal risk appetite is returning.
+                    </p>
+                </div>
+                
+                <!-- Chart: Oil vs Nifty Correlation -->
+                <div class="chart-container">
+                    <div class="chart-title">Crude Oil Spike: The Root Cause</div>
+                    <canvas id="oilChart" class="chart-canvas"></canvas>
+                </div>
+                
+                <div class="narrative-text">
+                    Brent crude surged <strong>4.2%</strong> to <strong>$104.49</strong>—the highest since October 2024. Every $10 increase adds ~0.4% to Indian inflation. If oil stays above $100, the RBI can't cut rates. No rate cuts = no liquidity boost = no market rally.
+                </div>
+                
+                <div class="narrative-text">
+                    <strong>Who gets hit hardest?</strong> Airlines (fuel is 40% of costs) and Auto (consumer wallets squeezed). Last time oil breached $100 (2022), Nifty fell 8% over the next two months.
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Chart 1: 7-Day Nifty Performance
+        const ctx1 = document.getElementById('niftyChart').getContext('2d');
+        new Chart(ctx1, {
+            type: 'line',
+            data: {
+                labels: ['Mar 22', 'Mar 23', 'Mar 24', 'Mar 25', 'Mar 26', 'Mar 27', 'Mar 28'],
+                datasets: [{
+                    label: 'Nifty 50',
+                    data: [24100, 23850, 23450, 23680, 23520, 23306, 22819],
+                    borderColor: '#ef4444',
+                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.3,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        ticks: {
+                            callback: function(value) {
+                                return value.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Chart 2: Market Cap Performance
+        const ctx2 = document.getElementById('marketCapChart').getContext('2d');
+        new Chart(ctx2, {
+            type: 'bar',
+            data: {
+                labels: ['Nifty 50 (Large)', 'Midcap 100', 'Smallcap 100'],
+                datasets: [{
+                    label: 'Today\'s Performance (%)',
+                    data: [-2.09, -2.80, -3.50],
+                    backgroundColor: [
+                        'rgba(239, 68, 68, 0.8)',
+                        'rgba(220, 38, 38, 0.8)',
+                        'rgba(185, 28, 28, 0.8)'
+                    ],
+                    borderColor: [
+                        '#ef4444',
+                        '#dc2626',
+                        '#b91c1c'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 0,
+                        min: -4,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Chart 3: Oil Price Trend
+        const ctx3 = document.getElementById('oilChart').getContext('2d');
+        new Chart(ctx3, {
+            type: 'line',
+            data: {
+                labels: ['Mar 22', 'Mar 23', 'Mar 24', 'Mar 25', 'Mar 26', 'Mar 27', 'Mar 28'],
+                datasets: [{
+                    label: 'Brent Crude ($/barrel)',
+                    data: [94, 96, 98, 97, 99, 100.2, 104.49],
+                    borderColor: '#f59e0b',
+                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.3,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        min: 90,
+                        max: 110,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
